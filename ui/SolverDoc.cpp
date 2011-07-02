@@ -394,6 +394,7 @@ void auto_nums(const T& line, const std::vector<int>& nums, std::vector<bool>& f
 	}
 
 	if (++left_pos >= --right_pos) return;
+	if (right_pos > line.size()) return;
 
 	// check for largest
 	std::vector<int> mid_nums(nums.begin() + left_num, nums.begin() + right_num + 1);
