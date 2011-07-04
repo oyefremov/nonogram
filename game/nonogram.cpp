@@ -50,15 +50,19 @@ void nonogram::calculateNumbers()
 		calc_nums(rows(i));
 }
 
-bool nonogram::gess(const std::string& s)
+bool nonogram::check(const std::string& s) const
 {
 	if (s.size() != m_realField.size()) return false;
 
 	auto res = std::mismatch(s.begin(), s.end(), m_realField.begin(), [](char a, char b){
 		return a == unknown_char || (a & char_mask) == b;
 	});
-	if (res.first != s.end()) return false;
+	return res.first == s.end();
+}
 
+bool nonogram::gess(const std::string& s)
+{
+	if (!check(s)) return false;
 	std::transform(s.begin(), s.end(), m_openField.begin(), m_openField.begin(), [](char a, char b){
 		return a != unknown_char && b == unknown_char ? a : b;
 	});

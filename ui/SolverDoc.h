@@ -5,17 +5,22 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <game/nonogram.h>
 
-const char unknown_cell = ' ';
-const char filled_cell = '#';
-const char empty_cell = '.';
-const char tmp_filled_cell = '*';
-const char tmp_empty_cell = ',';
+const char unknown_cell = nonogram::unknown_char;
+const char filled_cell = nonogram::filled_char;
+const char empty_cell = nonogram::empty_char;
+//const char gess_filled_cell = '*';
+//const char tmp_empty_cell = ',';
 
 class CSolverDoc : public CDocument
 {
-	std::vector<std::string> m_field;
-	std::vector<std::string> m_solution;
+//	std::vector<std::string> m_field;
+//	std::vector<std::string> m_solution;
+	std::string m_solution;
+	std::string m_gess;
+	size_t m_cols;
+	size_t m_rows;
 	std::vector< std::vector<int> > m_rows_blocks;
 	std::vector< std::vector<int> > m_cols_blocks;
 	std::vector< std::vector<bool> > m_rows_blocks_flags;
@@ -31,19 +36,22 @@ class CSolverDoc : public CDocument
 
 	std::string m_player_name;
 
+	nonogram m_nonogram;
+	size_t idx(int x, int y) const {return x + y * m_cols;}
+
 protected: // create from serialization only
 	CSolverDoc();
 	DECLARE_DYNCREATE(CSolverDoc)
 
 // Attributes
 public:
-	size_t cols() const {return m_field[0].size();}
-	size_t rows() const {return m_field.size();}
+	size_t cols() const {return m_cols;}
+	size_t rows() const {return m_rows;}
 	
-	char cell(size_t x, size_t y) const {return m_field[y][x];}
+	char cell(size_t x, size_t y) const {return m_field[idx(x, y)];}
 	char cell(CPoint pt) const {return cell(pt.x, pt.y);}
 	
-	void setCell(size_t x, size_t y, char value) {m_field[y][x] = value;}
+	void setCell(size_t x, size_t y, char value) {m_field[idx(x, y)] = value;}
 	void setCell(CPoint pt, char value) {setCell(pt.x, pt.y, value);}
 	
 	size_t max_col_blocks() const {return m_max_col_blocks;}

@@ -57,8 +57,10 @@ void CSolverDoc::newField(int rows, int cols)
 	m_cols_blocks_flags.clear();
 	m_field.clear();
 
-	std::string empty_line(cols, ' ');
-	m_field.resize(rows, empty_line);
+	m_rows = rows;
+	m_cols = cols;
+
+	m_field.resize(rows * cols, empty_cell);
 	m_rows_blocks.resize(rows);
 	m_cols_blocks.resize(cols);
 	m_rows_blocks_flags.resize(rows);
@@ -79,9 +81,9 @@ size_t CSolverDoc::maxBlocks(const std::vector< std::vector<int> >& blocks)
 	return std::max_element(blocks.begin(), blocks.end(), compare_by_size) -> size();
 }
 
-std::vector<int> parse(const wchar_t* s) 
+std::vector<int> parse(const std::string& s) 
 {
-	std::wstringstream line(s);
+	std::stringstream line(s);
 	std::vector<int> res;
 	int i;
 	while (line >> i)
@@ -129,17 +131,17 @@ void CSolverDoc::Dump(CDumpContext& dc) const
 
 BOOL CSolverDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
-	CStdioFile file;
+	std::ifstream file(lpszPathName);
 
-	if (!file.Open(lpszPathName, CFile::modeRead|CFile::shareDenyWrite))
+	if (!file)
 		return FALSE;
 
-	CString line;
+	std::string line;
 	std::vector< std::vector<int> > nums;
-	while (file.ReadString(line))
+	while (std::getline(file, line))
 	{
 		if (line == "// board") break;
-		if (line.IsEmpty() || line.GetLength() >= 2 &&
+		if (line.empty() || line.size() >= 2 &&
 			line[0] == '/' && line[1] == '/') continue;
 		
 		nums.push_back(parse(line));
@@ -149,19 +151,20 @@ BOOL CSolverDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	for (size_t i=0; i<rows(); ++i)
 	{
-		if (!file.ReadString(line)) return false;
-		std::copy(line.GetString(), line.GetString() + cols(), m_field[i].begin());
+		if (!std::getline(file, line)) return false;
+		m_field += line;
 	}
 
-	if (file.ReadString(line) && line == "// solution")
+	if (std::getline(file, line) && line == "// solution")
 	{
-		m_solution.clear();
-		m_solution.resize(rows(), std::string(cols(), ' '));
+		std::string solution;
 		for (size_t i=0; i<rows(); ++i)
 		{
-			if (!file.ReadString(line)) return false;
-			std::copy(line.GetString(), line.GetString() + cols(), m_solution[i].begin());
+			if (!std::getline(file, line)) return false;
+			solution += line;
 		}
+		m_nonogram.setRealField(std::move(solution), m_cols, m_rows);
+		m_nonogram.gess(m_field);
 	}
 	return TRUE;
 }
@@ -221,13 +224,11 @@ BOOL CSolverDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 	// board
 	file << "// board" << std::endl;
-	for (size_t i = 0; i < m_field.size(); ++i)
-		file << m_field[i] << std::endl;
+	file << m_field << std::endl;
 
 	// solution
 	file << "// solution" << std::endl;
-	for (size_t i = 0; i < m_field.size(); ++i)
-		file << m_solution[i] << std::endl;
+	file << m_solution << std::endl;
 
 	return TRUE;
 }
@@ -243,23 +244,17 @@ bool CSolverDoc::ensure()
 {
 	if (m_solution.empty()) return true;
 
-	for (size_t y = 0; y<m_field.size(); ++y)
-		for (size_t x = 0; x<m_field[0].size(); ++x)
-			if (m_field[y][x] == tmp_empty_cell && m_solution[y][x] != empty_cell ||
-				m_field[y][x] == tmp_filled_cell && m_solution[y][x] != filled_cell) return false;
-	return true;
+	return m_nonogram.check(m_gess);
 }
 
 void CSolverDoc::commit()
 {
-	replace(tmp_empty_cell, empty_cell);	
-	replace(tmp_filled_cell, filled_cell);	
+	m_nonogram.gess(m_gess);
 }
 
 void CSolverDoc::rollback()
 {
-	replace(tmp_empty_cell, unknown_cell);	
-	replace(tmp_filled_cell, unknown_cell);	
+	std::fill(m_gess.begin(), m_gess.end(), unknown_cell);
 }
 
 class column{

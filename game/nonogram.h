@@ -56,5 +56,8 @@ public:
 	col cols(size_t i) {return col(*this, i);}
 	row rows(size_t i) {return row(*this, i);}
 
+	bool check(const std::string& s) const;
 	bool gess(const std::string& s);
+
+	const std::string& getRealField() const {return m_realField;}
 };
