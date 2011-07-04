@@ -21,17 +21,17 @@ class CSolverDoc : public CDocument
 	std::string m_gess;
 	size_t m_cols;
 	size_t m_rows;
-	std::vector< std::vector<int> > m_rows_blocks;
-	std::vector< std::vector<int> > m_cols_blocks;
+	std::vector< std::vector<size_t> > m_rows_blocks;
+	std::vector< std::vector<size_t> > m_cols_blocks;
 	std::vector< std::vector<bool> > m_rows_blocks_flags;
 	std::vector< std::vector<bool> > m_cols_blocks_flags;
 
 	size_t m_max_row_blocks, m_max_col_blocks;
 
 	void newField(int rows, int cols);
-	static size_t maxBlocks(const std::vector< std::vector<int> >& blocks);
+	static size_t maxBlocks(const std::vector< std::vector<size_t> >& blocks);
 
-	static void saveBlocks(std::ostream& file, const std::vector< std::vector<int> >& blocks);
+	static void saveBlocks(std::ostream& file, const std::vector< std::vector<size_t> >& blocks);
 
 	std::string m_player_name;
 
@@ -50,8 +50,14 @@ public:
 	char cell(size_t x, size_t y) const {return m_field[idx(x, y)];}
 	char cell(CPoint pt) const {return cell(pt.x, pt.y);}
 	
+	char gessCell(size_t x, size_t y) const {return m_gess[idx(x, y)];}
+	char gessCell(CPoint pt) const {return gessCell(pt.x, pt.y);}
+	
 	void setCell(size_t x, size_t y, char value) {m_field[idx(x, y)] = value;}
 	void setCell(CPoint pt, char value) {setCell(pt.x, pt.y, value);}
+	
+	void setGessCell(size_t x, size_t y, char value) {m_gess[idx(x, y)] = value;}
+	void setGessCell(CPoint pt, char value) {setGessCell(pt.x, pt.y, value);}
 	
 	size_t max_col_blocks() const {return m_max_col_blocks;}
 	size_t max_row_blocks() const {return m_max_row_blocks;}
@@ -75,8 +81,8 @@ public:
 	void togle_row_num(CPoint p);
 	void auto_togle_row_num();
 
-	const std::vector<int>& col_blocks(int i) const {return m_cols_blocks[i];}
-	const std::vector<int>& row_blocks(int i) const {return m_rows_blocks[i];}
+	const std::vector<size_t>& col_blocks(int i) const {return m_cols_blocks[i];}
+	const std::vector<size_t>& row_blocks(int i) const {return m_rows_blocks[i];}
 
 	const std::vector<bool>& col_blocks_flags(int i) const {return m_cols_blocks_flags[i];}
 	const std::vector<bool>& row_blocks_flags(int i) const {return m_rows_blocks_flags[i];}

@@ -71,12 +71,12 @@ void CSolverDoc::newField(int rows, int cols)
 }
 
 
-bool compare_by_size(const std::vector<int>& a, const std::vector<int>& b)
+bool compare_by_size(const std::vector<size_t>& a, const std::vector<size_t>& b)
 {
 	return a.size() < b.size();
 }
 
-size_t CSolverDoc::maxBlocks(const std::vector< std::vector<int> >& blocks)
+size_t CSolverDoc::maxBlocks(const std::vector< std::vector<size_t> >& blocks)
 {
 	return std::max_element(blocks.begin(), blocks.end(), compare_by_size) -> size();
 }
@@ -96,7 +96,7 @@ std::vector<size_t> parse(const std::string& s)
 class sum{
 	int m_sum;
 public:
-	sum(const std::vector<int>& v) : m_sum(0) {
+	sum(const std::vector<size_t>& v) : m_sum(0) {
 		(*this)(v);
 	}
 	sum() : m_sum(0) {}
@@ -105,7 +105,7 @@ public:
 	{
 		m_sum += v;
 	}
-	void operator() (const std::vector<int>& v) 
+	void operator() (const std::vector<size_t>& v) 
 	{
 		m_sum += std::for_each(v.begin(), v.end(), sum());
 	}
@@ -169,7 +169,7 @@ BOOL CSolverDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return TRUE;
 }
 
-bool CSolverDoc::init_with_nums(const std::vector< std::vector<int> >& nums)
+bool CSolverDoc::init_with_nums(const std::vector< std::vector<size_t> >& nums)
 {
 	int all = std::for_each(nums.begin(), nums.end(), sum());
 	if (all <= 0) return false;
@@ -197,11 +197,11 @@ bool CSolverDoc::init_with_nums(const std::vector< std::vector<int> >& nums)
 }
 
 
-void CSolverDoc::saveBlocks(std::ostream& file, const std::vector< std::vector<int> >& blocks)
+void CSolverDoc::saveBlocks(std::ostream& file, const std::vector< std::vector<size_t> >& blocks)
 {
 	for (size_t i=0; i<blocks.size(); ++i)
 	{
-		const std::vector<int>& block = blocks[i];
+		const std::vector<size_t>& block = blocks[i];
 		if (block.size() == 0)
 			file << 0;
 		for (size_t j=0; j<block.size(); ++j)
@@ -259,9 +259,9 @@ public:
 };
 
 template <class T>
-std::vector<int> encode_line(const T& line)
+std::vector<size_t> encode_line(const T& line)
 {
-	std::vector<int> res;
+	std::vector<size_t> res;
 
 	int block = 0;
 	for (size_t i=0; i<line.size(); ++i)
@@ -313,7 +313,7 @@ void CSolverDoc::togle_row_num(CPoint p)
 }
 
 template<class T>
-void auto_nums(const T& line, const std::vector<int>& nums, std::vector<bool>& flags)
+void auto_nums(const T& line, const std::vector<size_t>& nums, std::vector<bool>& flags)
 {
 	if (std::find(flags.begin(), flags.end(), false) == flags.end())
 		return;
@@ -372,7 +372,7 @@ void auto_nums(const T& line, const std::vector<int>& nums, std::vector<bool>& f
 	if (right_pos > line.size()) return;
 
 	// check for largest
-	std::vector<int> mid_nums(nums.begin() + left_num, nums.begin() + right_num + 1);
+	std::vector<size_t> mid_nums(nums.begin() + left_num, nums.begin() + right_num + 1);
 	std::sort(mid_nums.rbegin(), mid_nums.rend());
 	for (int i=0; i<(signed)mid_nums.size() - 1; ++i)
 	{
@@ -386,7 +386,7 @@ void auto_nums(const T& line, const std::vector<int>& nums, std::vector<bool>& f
 	{
 		size_t block = 0;
 		bool empty = false;
-		std::vector<int> mid_nums_2;
+		std::vector<size_t> mid_nums_2;
 		for (size_t i = left_pos; i < right_pos; ++i)
 		{
 			if (line[i] == filled_cell) ++block;
@@ -409,11 +409,12 @@ void auto_nums(const T& line, const std::vector<int>& nums, std::vector<bool>& f
 
 void CSolverDoc::auto_togle_row_num()
 {
-	for (size_t i = 0; i < cols(); ++i)
-		auto_nums(column(m_field, i), m_cols_blocks[i], m_cols_blocks_flags[i]);
+	// TODO: implement
+	//for (size_t i = 0; i < cols(); ++i)
+	//	auto_nums(column(m_field, i), m_cols_blocks[i], m_cols_blocks_flags[i]);
 
-	for (size_t i = 0; i < rows(); ++i)
-		auto_nums(m_field[i], m_rows_blocks[i], m_rows_blocks_flags[i]);
+	//for (size_t i = 0; i < rows(); ++i)
+	//	auto_nums(m_field[i], m_rows_blocks[i], m_rows_blocks_flags[i]);
 }
 
 

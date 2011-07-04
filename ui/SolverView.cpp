@@ -79,33 +79,42 @@ void CSolverView::drawCell(CDC* pDC, int size, int x, int y)
 	CSolverDoc* pDoc = GetDocument();
 
 	char c = pDoc->cell(x, y);
+	char g = pDoc->gessCell(x, y);
+
+	bool dot = false;
+	COLORREF bgColor, dotColor;
+
 	switch (c)
 	{
-	case unknown_cell:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(255, 255, 255));
-		break;
 	case empty_cell:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(255, 255, 255));
-		pDC->FillSolidRect(x * size + size / 2 - 1, y * size + size / 2 - 1, 3, 3, RGB(0, 0, 255));
-		break;
-	case tmp_empty_cell:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(230, 230, 255));
-		pDC->FillSolidRect(x * size + size / 2 - 1, y * size + size / 2 - 1, 3, 3, RGB(0, 0, 255));
+		bgColor = RGB(255, 255, 255);
+		dot = true;
+		dotColor = RGB(0, 0, 255);
 		break;
 	case filled_cell:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(128, 128, 128));
+		bgColor = RGB(128, 128, 128);
 		break;
-	case tmp_filled_cell:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(128, 128, 200));
-		break;
-	default:
-		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(255, 255, 255));
-		pDC->MoveTo(x * size + 1, y * size + 1);
-		pDC->LineTo(x * size + 1 + size - 1, y * size + 1 + size - 1);
-		pDC->MoveTo(x * size + 1 + size - 1, y * size + 1);
-		pDC->LineTo(x * size + 1, y * size + 1 + size - 1);
+	case unknown_cell:
+		switch (g)
+		{
+		case unknown_cell:
+			bgColor = RGB(255, 255, 255);
+			//		pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, RGB(255, 255, 255));
+			break;
+		case empty_cell:
+			bgColor = RGB(230, 230, 255);
+			dot = true;
+			dotColor = RGB(0, 0, 255);
+			break;
+		case filled_cell:
+			bgColor = RGB(128, 128, 200);
+			break;
+		}
 		break;
 	}
+	pDC->FillSolidRect(x * size + 1, y * size + 1, size - 1, size - 1, bgColor);
+	if (dot)
+		pDC->FillSolidRect(x * size + size / 2 - 1, y * size + size / 2 - 1, 3, 3, dotColor);
 }
 
 void CSolverView::drawNumbers(CDC* pDC)
@@ -117,7 +126,7 @@ void CSolverView::drawNumbers(CDC* pDC)
 	COLORREF flagged = RGB(255, 220, 220);
 	for (size_t col = 0; col < GetDocument()->cols(); ++col)
 	{
-		const std::vector<int>& blocks = GetDocument()->col_blocks(col);
+		const std::vector<size_t>& blocks = GetDocument()->col_blocks(col);
 		const std::vector<bool>& flags = GetDocument()->col_blocks_flags(col);
 		int x_pos = col * cell_size + shift_x;
 		for (int i=0; i<(int)blocks.size(); ++i)
@@ -129,7 +138,7 @@ void CSolverView::drawNumbers(CDC* pDC)
 	}
 	for (size_t row = 0; row < GetDocument()->rows(); ++row)
 	{
-		const std::vector<int>& blocks = GetDocument()->row_blocks(row);
+		const std::vector<size_t>& blocks = GetDocument()->row_blocks(row);
 		const std::vector<bool>& flags = GetDocument()->row_blocks_flags(row);
 		int y_pos = row * cell_size + shift_y;
 		for (int i=0; i<(int)blocks.size(); ++i)
@@ -243,23 +252,16 @@ void CSolverView::try_color(char newColor, CPoint point)
 	toCellPoint(point);
 	if (GetDocument()->isField(point) && !m_drawing)
 	{
-		char cell_color = GetDocument()->cell(point);
-		switch (cell_color)
-		{
-		case tmp_empty_cell:
-		case tmp_filled_cell:
-			if (cell_color == newColor)
-				newColor = unknown_cell;
-			break;
-		case unknown_cell:
-			break;
-		default:
-			return;
-		}
+		if (GetDocument()->cell(point) != unknown_cell) return;
+		char gess_color = GetDocument()->gessCell(point);
+
+		if (gess_color != unknown_cell)
+			newColor = unknown_cell;
+
 		m_color = newColor;
 		m_drawing = true;
 		SetCapture();
-		GetDocument()->setCell(point, m_color);
+		GetDocument()->setGessCell(point, m_color);
 		Invalidate(false);
 	}
 }
@@ -267,7 +269,7 @@ void CSolverView::try_color(char newColor, CPoint point)
 
 void CSolverView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	try_color(tmp_filled_cell, point);
+	try_color(filled_cell, point);
 
 	try_nums(point);
 
@@ -284,7 +286,7 @@ void CSolverView::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CSolverView::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	try_color(tmp_empty_cell, point);
+	try_color(empty_cell, point);
 	CView::OnRButtonDown(nFlags, point);
 }
 
