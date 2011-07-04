@@ -55,12 +55,12 @@ void CSolverDoc::newField(int rows, int cols)
 	m_cols_blocks.clear();
 	m_rows_blocks_flags.clear();
 	m_cols_blocks_flags.clear();
-	m_field.clear();
+
+	m_field = m_gess = std::string(rows * cols, unknown_cell);
 
 	m_rows = rows;
 	m_cols = cols;
 
-	m_field.resize(rows * cols, empty_cell);
 	m_rows_blocks.resize(rows);
 	m_cols_blocks.resize(cols);
 	m_rows_blocks_flags.resize(rows);
@@ -241,6 +241,7 @@ bool CSolverDoc::ensure()
 void CSolverDoc::commit()
 {
 	m_nonogram.gess(m_gess);
+	m_field = m_nonogram.getOpenField();
 }
 
 void CSolverDoc::rollback()

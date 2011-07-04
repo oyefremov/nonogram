@@ -300,16 +300,16 @@ void CSolverView::OnRButtonUp(UINT nFlags, CPoint point)
 
 void CSolverView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO: Add your message handler code here and/or call default
 	if (m_drawing)
 	{
 		toCellPoint(point);
 		if (GetDocument()->isField(point))
 		{
-			char c = GetDocument()->cell(point);
-			if (c != empty_cell && c != filled_cell && c != m_color)
+			char cell = GetDocument()->cell(point);
+			char gess = GetDocument()->gessCell(point);
+			if (cell == unknown_cell && gess != m_color)
 			{
-				GetDocument()->setCell(point, m_color);
+				GetDocument()->setGessCell(point, m_color);
 				Invalidate(false);
 			}
 		}
