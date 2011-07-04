@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket", "socket\socket.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "error", "error\error.vcxproj", "{841B7239-7588-4771-A5BC-092EB54DA710}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxproj", "{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +51,10 @@ Global
 		{841B7239-7588-4771-A5BC-092EB54DA710}.Debug|Win32.Build.0 = Debug|Win32
 		{841B7239-7588-4771-A5BC-092EB54DA710}.Release|Win32.ActiveCfg = Release|Win32
 		{841B7239-7588-4771-A5BC-092EB54DA710}.Release|Win32.Build.0 = Release|Win32
+		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Debug|Win32.Build.0 = Debug|Win32
+		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Release|Win32.ActiveCfg = Release|Win32
+		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
