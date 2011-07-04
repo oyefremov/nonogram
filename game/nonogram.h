@@ -59,5 +59,5 @@ public:
 	bool check(const std::string& s) const;
 	bool gess(const std::string& s);
 
-	const std::string& getRealField() const {return m_realField;}
+	const std::string& getRealField() const {return m_realField;}	
 };

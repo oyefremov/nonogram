@@ -48,10 +48,10 @@ public:
 	size_t cols() const {return m_cols;}
 	size_t rows() const {return m_rows;}
 	
-	char cell(size_t x, size_t y) const {return m_field[idx(x, y)];}
+	char cell(size_t x, size_t y) const {return m_solution[idx(x, y)];}
 	char cell(CPoint pt) const {return cell(pt.x, pt.y);}
 	
-	void setCell(size_t x, size_t y, char value) {m_field[idx(x, y)] = value;}
+	void setCell(size_t x, size_t y, char value) {m_solution[idx(x, y)] = value;}
 	void setCell(CPoint pt, char value) {setCell(pt.x, pt.y, value);}
 	
 	size_t max_col_blocks() const {return m_max_col_blocks;}
