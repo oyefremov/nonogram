@@ -35,6 +35,28 @@ class nonogram
 		std::vector<size_t>& nums() {return n.m_cols[c];}
 	};
 
+	class open_row
+	{
+		nonogram& n;
+		size_t r;
+	public:
+		open_row(nonogram& _n, size_t _i) : n(_n), r(_i) {}
+		size_t size() const {return n.m_width;}
+		char operator[](size_t c) const {return n.m_openField[n.getIndex(c, r)];}
+		const std::vector<size_t>& nums() const {return n.m_rows[r];}
+	};
+
+	class open_col
+	{
+		nonogram& n;
+		size_t c;
+	public:
+		open_col(nonogram& _n, size_t _i) : n(_n), c(_i) {}
+		size_t size() const {return n.m_height;}
+		char operator[](size_t r) const {return n.m_openField[n.getIndex(c, r)];}
+		const std::vector<size_t>& nums() const {return n.m_cols[c];}
+	};
+
 	std::string m_realField;
 	std::string m_openField;
 	std::vector<std::vector<size_t>> m_cols;
@@ -56,6 +78,9 @@ public:
 
 	col cols(size_t i) {return col(*this, i);}
 	row rows(size_t i) {return row(*this, i);}
+
+	open_col open_cols(size_t i) {return open_col(*this, i);}
+	open_row open_rows(size_t i) {return open_row(*this, i);}
 
 	bool check(const std::string& s) const;
 	bool gess(const std::string& s);
