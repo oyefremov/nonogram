@@ -60,4 +60,5 @@ public:
 	bool gess(const std::string& s);
 
 	const std::string& getRealField() const {return m_realField;}	
+	std::vector<std::vector<size_t>> getNums() const;
 };

@@ -68,3 +68,12 @@ bool nonogram::gess(const std::string& s)
 	});
 	return true;
 }
+
+std::vector<std::vector<size_t>> nonogram::getNums() const
+{
+	std::vector<std::vector<size_t>> res;
+	res.reserve(m_cols.size() + m_rows.size());
+	res = m_cols;
+	res.insert(res.end(), m_rows.begin(), m_rows.end());
+	return res;
+}

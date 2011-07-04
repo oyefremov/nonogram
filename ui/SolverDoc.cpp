@@ -81,11 +81,11 @@ size_t CSolverDoc::maxBlocks(const std::vector< std::vector<int> >& blocks)
 	return std::max_element(blocks.begin(), blocks.end(), compare_by_size) -> size();
 }
 
-std::vector<int> parse(const std::string& s) 
+std::vector<size_t> parse(const std::string& s) 
 {
 	std::stringstream line(s);
-	std::vector<int> res;
-	int i;
+	std::vector<size_t> res;
+	size_t i;
 	while (line >> i)
 		res.push_back(i);
 	if (res.size() == 1 && res[0] == 0) 
@@ -137,7 +137,7 @@ BOOL CSolverDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 
 	std::string line;
-	std::vector< std::vector<int> > nums;
+	std::vector< std::vector<size_t> > nums;
 	while (std::getline(file, line))
 	{
 		if (line == "// board") break;
@@ -228,22 +228,13 @@ BOOL CSolverDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 	// solution
 	file << "// solution" << std::endl;
-	file << m_solution << std::endl;
+	file << m_nonogram.getRealField() << std::endl;
 
 	return TRUE;
 }
 
-
-void CSolverDoc::replace(char oldColor, char newColor)
-{
-	for (size_t i = 0; i<m_field.size(); ++i)
-		std::replace(m_field[i].begin(), m_field[i].end(), oldColor, newColor);
-}
-
 bool CSolverDoc::ensure()
 {
-	if (m_solution.empty()) return true;
-
 	return m_nonogram.check(m_gess);
 }
 
@@ -301,20 +292,9 @@ std::vector<int> encode_line(const T& line)
 
 void CSolverDoc::generate_new(int size, int prob, int seed)
 {
-	m_solution.clear();
-	m_solution.resize(size, std::string(size, empty_cell));
 	srand(seed);
-	for (int y = 0; y < size; ++y)
-		for (int x = 0; x < size; ++x)
-			if (rand() % 100 < prob) m_solution[y][x] = filled_cell;
-
-	std::vector< std::vector<int> > nums;
-	for (size_t col = 0; col < m_solution[0].size(); ++col)
-		nums.push_back( encode_line(column(m_solution, col)) );
-	for (size_t row = 0; row < m_solution.size(); ++row)
-		nums.push_back( encode_line(m_solution[row]) );
-
-	init_with_nums(nums);
+	m_nonogram.generateRandomField(prob, size, size);
+	init_with_nums(m_nonogram.getNums());
 }
 
 void CSolverDoc::togle_column_num(CPoint p)
