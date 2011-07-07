@@ -28,7 +28,7 @@ namespace wsa
 		~socket() {close();}
 
 		void close();
-		bool is_valid() const {return m_socket != INVALID_SOCKET;}
+		bool isValid() const {return m_socket != INVALID_SOCKET;}
 		SOCKET getHandle() const {return m_socket;}
 		SOCKET detachHandle();
 		socket& operator=(SOCKET s);
@@ -38,22 +38,21 @@ namespace wsa
 		void send(const char* buf, int len);
 
 		socket& operator<<(const char* s);
+		socket& operator<<(const std::string& s) {return (*this) << s.c_str();}
 		socket& operator>>(std::string& s);
 	};
 
-	class server_socket : public wsa::socket
+	class server_socket : wsa::socket
 	{
 		server_socket(const server_socket&); // disabled copy constructor 
 		void operator=(const server_socket&); // disabled copy operator
 	public:
 		server_socket(){}
-		server_socket(SOCKET s) 
-			: wsa::socket(s) {}
-		server_socket(server_socket&& s) 
-			: wsa::socket(std::move(s)) {} // move constructor 
+		server_socket(SOCKET s) : wsa::socket(s) {}
+		server_socket(server_socket&& s) : wsa::socket(std::move(s)) {} // move constructor 
 
-		void start_game();
-		void stop_game();
+		using wsa::socket::isValid;
+		using wsa::socket::getHandle;
 
 		socket accept();
 	};

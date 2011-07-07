@@ -33,6 +33,9 @@
     <ClInclude Include="mutex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="command_handlers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,6 +51,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mutex.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core_commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="command_handlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

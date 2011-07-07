@@ -6,17 +6,6 @@ game::~game()
 {
 }
 
-void list_players(game& g, wsa::socket& s)
-{
-	std::stringstream list;
-	{
-		synch s(g.lock());
-		for (size_t i=0; i<g.players().size(); ++i)
-			list << g.players()[i]->getName() << std::endl;
-	}
-	s << list.str().c_str();
-}
-
 DWORD WINAPI NewPlayerHandler(LPVOID lpParameter)
 {
 	player p(reinterpret_cast<player_struct*>(lpParameter));
@@ -27,20 +16,13 @@ DWORD WINAPI NewPlayerHandler(LPVOID lpParameter)
 		p->socket() >> name;
 
 		std::cout << name << std::endl;
-		p->setName(name);
+		p->set_name(name);
 		p->game()->addPlayer(p);
 
 		p->socket() << "You was successfully connected to the game";
-			
-		for(;;)
-		{
-			std::string command;
-			p->socket() >> command;
-			std::cout << p->getName() << ": " << command << std::endl;
-			if (command == "list players")
-				list_players(*p->game(), p->socket());
-			else p->socket() << "Unknown command";
-		}
+		p->main_messages_loop();
+
+		std::cout << "Player " << name << " disconnected" << std::endl;
 	}
 	catch(std::exception& e)
 	{
@@ -48,6 +30,36 @@ DWORD WINAPI NewPlayerHandler(LPVOID lpParameter)
 	}
 	p->game()->removePlayer(p);
 	return 0;
+}
+
+void player_struct::main_messages_loop()
+{
+	try
+	{
+		std::string command;
+		bool run = true;
+		while(run)
+		{
+			socket() >> command;
+			std::cout << name() << ": " << command << std::endl;
+
+			switch(handle_command(command, *this, *game()))
+			{
+			case cmd::ok:
+				break;
+			case cmd::error:
+				std::cerr << "Error in player " << name() << " command handler. Invalid command " << command << std::endl;
+				break;
+			case cmd::logout_player:
+				run = false;
+				break;
+			}
+		}
+	}
+	catch(std::exception& e)
+	{
+		std::cout << "Error in " << name() << " player loop: " << e.what() << std::endl;
+	}
 }
 
 
@@ -68,11 +80,18 @@ void game::new_player(wsa::socket s)
 void game::addPlayer(player& p)
 {
 	synch s(m_game_lock);
-	m_players.push_back(p);
+	m_players[p->name()] = p;
 }
 
 void game::removePlayer(player& p)
 {
 	synch s(m_game_lock);
-	m_players.erase(std::find(m_players.begin(), m_players.end(), p));
+	m_players.erase(m_players.find(p->name()));
+}
+
+player game::player_by_name(const std::string& name) const
+{
+	auto pos = m_players.find(name);
+	if (pos == m_players.end()) return player();
+	return pos->second;
 }

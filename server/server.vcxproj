@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client_handler.h" />
+    <ClInclude Include="command_handlers.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="mutex.h" />
     <ClInclude Include="stdafx.h" />
@@ -87,6 +88,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client_handler.cpp" />
+    <ClCompile Include="command_handlers.cpp" />
+    <ClCompile Include="core_commands.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="mutex.cxx" />
     <ClCompile Include="server.cpp" />

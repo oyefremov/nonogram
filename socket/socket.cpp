@@ -70,7 +70,7 @@ wsa::socket& wsa::socket::operator=(wsa::socket&& s)
 
 void wsa::socket::close() 
 {
-	if (is_valid())
+	if (isValid())
 	{
 		closesocket(m_socket); 
 		m_socket = INVALID_SOCKET;
@@ -81,7 +81,7 @@ wsa::socket wsa::connect(const char* server, int port)
 {
 	socket s = ::socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 
-	if ( !s.is_valid() ) 
+	if ( !s.isValid() ) 
 		WinAPIError("Error at socket()");		
 
 	//Connect to the server. 
@@ -133,7 +133,7 @@ wsa::server_socket wsa::listen(const char* server, int port, int backlog)
 {
 	server_socket s = ::socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 
-	if ( !s.is_valid() ) 
+	if ( !s.isValid() ) 
 		WinAPIError("socket() failed");		
 
 	//Bind the socket. 
