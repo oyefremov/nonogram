@@ -318,7 +318,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDR_MAINFRAME           "японський кросворд"
+    IDR_MAINFRAME           "nonogram"
     IDR_SolverTYPE          "\nSolver\nSolver\nText Files (*.txt)\n.txt\nui.Document\nui.Document"
 END
 

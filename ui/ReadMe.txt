@@ -80,7 +80,7 @@ SolverDoc.h, SolverDoc.cpp - the document
     The Document will have the following strings:
         File extension:      txt
         File type ID:        ui.Document
-        Main frame caption:  японський кросворд
+        Main frame caption:  nonogram
         Doc type name:       Solver
         Filter name:         Text Files (*.txt)
         File new short name: Solver
