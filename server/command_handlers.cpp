@@ -2,6 +2,7 @@
 #include <map>
 #include <cassert>
 #include <iostream>
+#include <sstream>
 
 std::map<std::string, cmd::command_handler_ptr> g_map;
 
@@ -21,17 +22,19 @@ void cmd::unregister_handler(const char* name)
 	 g_map.erase(pos);
 }
 
-cmd::result handle_command(const std::string& name, player_struct& p, game& g)
+void handle_command(const std::string& name, player_struct& p, game& g, std::istream& params)
 {
 	 auto pos = g_map.find(name);	
 	 if (pos != g_map.end())
 	 {
-		 return pos->second(name, p, g);
+		 return pos->second(name, p, g, params);
 	 }
 	 else
 	 {
+		 std::stringstream s;
+		 s << "Unsupported command " << name << "\r\n";
 		 // default handler
-		 p.socket() << "Unsupported command " << name;
-		 return cmd::error;
+		 p.socket() << s.str();
+		 throw cmd::error(s.str());
 	 }
 }

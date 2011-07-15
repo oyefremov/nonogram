@@ -15,13 +15,13 @@
 //		return cmd::ok;
 // }
 #define COMMAND(name) \
-	cmd::result command_hadler_##name##_hidden(const std::string& name, player_struct& p, game& g);\
+	void command_hadler_##name##_hidden(const std::string& name, player_struct& p, game& g, std::istream& params);\
 	register_handler command_hadler_##name##_hidden_registrator(#name, &command_hadler_##name##_hidden);\
-	cmd::result command_hadler_##name##_hidden(const std::string& name, player_struct& p, game& g)
+	void command_hadler_##name##_hidden(const std::string& name, player_struct& p, game& g, std::istream& params)
 
 namespace cmd
 {
-	typedef result (*command_handler_ptr)(const std::string& name, player_struct& p, game& g);
+	typedef void (*command_handler_ptr)(const std::string& name, player_struct& p, game& g, std::istream& params);
 
 	void register_new_handler(const char* name, command_handler_ptr);
 	void unregister_handler(const char* name);

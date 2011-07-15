@@ -41,7 +41,9 @@ class game
 	critical_section m_game_lock;
 public:
 	~game();
+	void exit();
 	void new_player(wsa::socket s);
+	bool rename(const std::string& oldname, const std::string& newname);
 	void addPlayer(player& p);
 	void removePlayer(player& p);
 	const players_map& players() const {return m_players;}
@@ -51,12 +53,21 @@ public:
 
 namespace cmd
 {
-	enum result
+	class error : public std::exception
 	{
-		ok,
-		error,
-		logout_player
+		std::string message;
+	public:
+		error(std::string m) : message(m) {}
+		const char* what() const {return message.c_str();}
+	};
+	class exitgame : public std::exception
+	{
+	public:
+		exitgame() {}
+		const char* what() const {return "cmd::exitgame exception";}
 	};
 }
-cmd::result handle_command(const std::string& name, player_struct& p, game& g);
+
+
+void handle_command(const std::string& name, player_struct& p, game& g, std::istream& params);
 

@@ -1,4 +1,5 @@
 #include "socket.h"
+#include <sstream>
 
 // Initialize WSA 
 namespace wsa
@@ -123,9 +124,20 @@ wsa::socket& wsa::socket::operator<<(const char* s)
 
 wsa::socket& wsa::socket::operator>>(std::string& s)
 {
-	char buf[1024 * 4];
-	int len = recv(buf, sizeof(buf) - 1);
-	s.assign(buf, len);
+	std::stringstream buf;
+	char p = 0, c = 0;
+	do
+	{
+		if (p) buf << p;
+		p = c;
+		c = '\n';
+		recv(&c, 1);
+	}
+	while (c != '\n'); 
+	if (p && p != '\r')
+		buf << p;
+
+	s = buf.str();
 	return *this;
 }
 
