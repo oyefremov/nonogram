@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "error", "error\error.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxproj", "{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nclient", "nclient\nclient.vcxproj", "{8C4D28BB-FA2C-44DD-BA08-8000CA1623E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -55,6 +57,10 @@ Global
 		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Debug|Win32.Build.0 = Debug|Win32
 		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Release|Win32.ActiveCfg = Release|Win32
 		{E2D2974B-FF6D-4BB9-9B24-A0B39523A50A}.Release|Win32.Build.0 = Release|Win32
+		{8C4D28BB-FA2C-44DD-BA08-8000CA1623E7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C4D28BB-FA2C-44DD-BA08-8000CA1623E7}.Debug|Win32.Build.0 = Debug|Win32
+		{8C4D28BB-FA2C-44DD-BA08-8000CA1623E7}.Release|Win32.ActiveCfg = Release|Win32
+		{8C4D28BB-FA2C-44DD-BA08-8000CA1623E7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
