@@ -6,6 +6,17 @@
 
 
 template<class T>
+void commit_line(T& line, std::string& solution)
+{
+	if (solve_empty_line(line, solution))
+	{
+		for (size_t j=0; j<line.size(); ++j)
+			line[j] = solution[j];
+	}
+}
+
+
+template<class T>
 bool solve_empty_line(const T& line, std::string& solution)
 {
 	const int line_size = line.size();
