@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nonogram.h" />
+    <ClInclude Include="stepierator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nonogram.cpp" />

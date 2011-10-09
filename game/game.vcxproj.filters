@@ -21,6 +21,9 @@
     <ClInclude Include="nonogram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="stepierator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nonogram.cpp">

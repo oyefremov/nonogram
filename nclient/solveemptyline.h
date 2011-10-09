@@ -6,13 +6,11 @@
 
 
 template<class T>
-void commit_line(T& line, std::string& solution)
+void commit_line(T& line, const std::string& solution)
 {
-	if (solve_empty_line(line, solution))
-	{
-		for (size_t j=0; j<line.size(); ++j)
-			line[j] = solution[j];
-	}
+	std::copy(solution.begin(), solution.end(), line.begin());
+	//for (size_t j=0; j<line.size(); ++j)
+	//	line[j] = solution[j];
 }
 
 
@@ -20,8 +18,7 @@ template<class T>
 bool solve_empty_line(const T& line, std::string& solution)
 {
 	const int line_size = line.size();
-	solution.resize(line_size, nonogram::unknown_char);
-	std::fill_n(solution.begin(), line_size, nonogram::unknown_char);
+	solution.assign(line.begin(), line.end());
 
 	const int nums_sum = sum(line.nums());	
 

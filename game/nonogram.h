@@ -3,12 +3,19 @@
 
 #include <string>
 #include <vector>
+#include "stepierator.h"
 
 class nonogram_col;
 class nonogram_row;
 
 class nonogram
 {
+	typedef std::string::const_iterator const_row_iterator;
+	typedef std::string::iterator row_iterator;
+
+	typedef step_iterator_t<const char*> const_col_iterator;
+	typedef step_iterator_t<char*> col_iterator;
+
 	class row
 	{
 		nonogram& n;
@@ -41,6 +48,10 @@ class nonogram
 		size_t r;
 	public:
 		open_row(nonogram& _n, size_t _i) : n(_n), r(_i) {}
+		row_iterator begin() {return n.m_openField.begin() + n.getIndex(0, r);}
+		row_iterator end() {return n.m_openField.begin() + n.getIndex(size(), r);}
+		const_row_iterator begin() const {return n.m_openField.begin() + n.getIndex(0, r);}
+		const_row_iterator end() const {return n.m_openField.begin() + n.getIndex(size(), r);}
 		size_t size() const {return n.m_width;}
 		char operator[](size_t c) const {return n.m_openField[n.getIndex(c, r)];}
 		char& operator[](size_t c) {return n.m_openField[n.getIndex(c, r)];}
@@ -53,6 +64,10 @@ class nonogram
 		size_t c;
 	public:
 		open_col(nonogram& _n, size_t _i) : n(_n), c(_i) {}
+		col_iterator begin() {return col_iterator(&n.m_openField[n.getIndex(c, 0)], size());}
+		col_iterator end() {return col_iterator(&n.m_openField[0] + n.getIndex(c, size()), size());}
+		const_col_iterator begin() const {return const_col_iterator(&n.m_openField[n.getIndex(c, 0)], size());}
+		const_col_iterator end() const {return const_col_iterator(&n.m_openField[0] + n.getIndex(c, size()), size());}
 		size_t size() const {return n.m_height;}
 		char operator[](size_t r) const {return n.m_openField[n.getIndex(c, r)];}
 		char& operator[](size_t r) {return n.m_openField[n.getIndex(c, r)];}
