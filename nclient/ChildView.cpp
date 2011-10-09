@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "autonum.h"
+#include "solveemptyline.h"
 #include "utils.h"
 
 #ifdef _DEBUG
@@ -27,6 +28,8 @@ CChildView::CChildView()
 , m_max_col_blocks(0)
 {
 	generate_new(20, 60, 4);
+	solve_empty_lines();
+	m_field = m_nonogram.getOpenField();
 }
 
 CChildView::~CChildView()
@@ -380,6 +383,26 @@ void CChildView::auto_togle_row_num()
 	for (size_t i = 0; i < rows(); ++i)
 		auto_nums(m_nonogram.open_rows(i), m_rows_blocks_flags[i]);
 }
+
+void CChildView::solve_empty_lines()
+{
+	std::string solution;
+	for (size_t i = 0; i < cols(); ++i)
+	{
+		auto line = m_nonogram.open_cols(i);
+		if (solve_empty_line(line, solution))
+			commit_line(line, solution);
+	}
+
+	for (size_t i = 0; i < rows(); ++i)
+	{
+		auto line = m_nonogram.open_rows(i);
+		if (solve_empty_line(line, solution))
+			commit_line(line, solution);
+	}
+}
+
+
 void CChildView::commit()
 {
 	m_nonogram.gess(m_gess);

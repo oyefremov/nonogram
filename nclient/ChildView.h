@@ -98,6 +98,7 @@ public:
 	void togle_column_num(CPoint p);
 	void togle_row_num(CPoint p);
 	void auto_togle_row_num();
+	void solve_empty_lines();
 
 	const std::vector<size_t>& col_blocks(int i) const {return m_cols_blocks[i];}
 	const std::vector<size_t>& row_blocks(int i) const {return m_rows_blocks[i];}
