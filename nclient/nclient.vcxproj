@@ -101,6 +101,7 @@
     <None Include="res\nclient.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="autonum.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nclient.h" />
