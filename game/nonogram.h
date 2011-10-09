@@ -43,6 +43,7 @@ class nonogram
 		open_row(nonogram& _n, size_t _i) : n(_n), r(_i) {}
 		size_t size() const {return n.m_width;}
 		char operator[](size_t c) const {return n.m_openField[n.getIndex(c, r)];}
+		char& operator[](size_t c) {return n.m_openField[n.getIndex(c, r)];}
 		const std::vector<size_t>& nums() const {return n.m_rows[r];}
 	};
 
@@ -54,6 +55,7 @@ class nonogram
 		open_col(nonogram& _n, size_t _i) : n(_n), c(_i) {}
 		size_t size() const {return n.m_height;}
 		char operator[](size_t r) const {return n.m_openField[n.getIndex(c, r)];}
+		char& operator[](size_t r) {return n.m_openField[n.getIndex(c, r)];}
 		const std::vector<size_t>& nums() const {return n.m_cols[c];}
 	};
 

@@ -25,14 +25,21 @@ bool solve_empty_line(const T& line, std::string& solution)
 
 	bool res = false;
 	auto pos = solution.begin();
-	std::for_each(line.nums().begin(), line.nums().end(), [int num](){
+	std::for_each(line.nums().begin(), line.nums().end(), [&](int num)
+	{
 		if (num > penalty)
 		{
 			// place current num
 			std::fill(pos + penalty, pos + num, nonogram::filled_char);
 			res = true;
 		}
-		pos += num + 1;
+		pos += num;
+		if (pos != solution.end())
+		{
+			if (penalty == 0)
+				*pos = nonogram::empty_char;
+			++pos;
+		}
 	});
 	
 	return res;
