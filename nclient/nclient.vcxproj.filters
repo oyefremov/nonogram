@@ -45,7 +45,7 @@
     <ClInclude Include="autonum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="solveemptylines.h">
+    <ClInclude Include="solveemptyline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
